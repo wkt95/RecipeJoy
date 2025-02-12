@@ -1,0 +1,54 @@
+{
+  "recipeTypes": [
+    {
+      "id": 1,
+      "name": "Main Course",
+      "description": "Primary dishes typically served as the main meal"
+    },
+    {
+      "id": 2,
+      "name": "Appetizer",
+      "description": "Small dishes served before the main course"
+    },
+    {
+      "id": 3,
+      "name": "Soup",
+      "description": "Liquid dishes including broths, creams, and stews"
+    },
+    {
+      "id": 4,
+      "name": "Salad",
+      "description": "Cold dishes primarily made with vegetables"
+    },
+    {
+      "id": 5,
+      "name": "Side Dish",
+      "description": "Accompaniments to the main course"
+    },
+    {
+      "id": 6,
+      "name": "Breakfast",
+      "description": "Morning meals and breakfast items"
+    },
+    {
+      "id": 7,
+      "name": "Dessert",
+      "description": "Sweet dishes served after meals"
+    },
+    {
+      "id": 8,
+      "name": "Snack",
+      "description": "Light meals or finger foods"
+    },
+    {
+      "id": 9,
+      "name": "Beverage",
+      "description": "Drinks and liquid refreshments"
+    },
+    {
+      "id": 10,
+      "name": "Sauce",
+      "description": "Condiments and sauce preparations"
+    }
+  ]
+}
