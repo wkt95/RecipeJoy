@@ -3,6 +3,7 @@ package com.example.recipejoy.ui.screen
 import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.example.recipejoy.data.model.Ingredient
 import com.example.recipejoy.data.model.Recipe
@@ -10,18 +11,19 @@ import com.example.recipejoy.data.model.RecipeType
 import com.example.recipejoy.data.repository.RecipeRepository
 import com.example.recipejoy.data.repository.RecipeTypeRepository
 import com.example.recipejoy.utils.ImageUtils
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-class AddRecipeViewModel(
+class EditRecipeViewModel(
     application: Application,
     private val recipeRepository: RecipeRepository,
-    private val recipeTypeRepository: RecipeTypeRepository
+    private val recipeTypeRepository: RecipeTypeRepository,
+    savedStateHandle: SavedStateHandle
 ) : AndroidViewModel(application) {
 
-    private val _uiState = MutableStateFlow(AddRecipeUiState())
-    val uiState: StateFlow<AddRecipeUiState> = _uiState.asStateFlow()
+    private val recipeId: Int = checkNotNull(savedStateHandle["recipeId"])
+    private val _uiState = MutableStateFlow(EditRecipeUiState())
+    val uiState: StateFlow<EditRecipeUiState> = _uiState.asStateFlow()
 
     val recipeTypes: StateFlow<List<RecipeType>> = recipeTypeRepository
         .getAllRecipeTypes()
@@ -31,13 +33,52 @@ class AddRecipeViewModel(
             initialValue = emptyList()
         )
 
+    init {
+        loadRecipe()
+    }
+
+    private fun loadRecipe() {
+        viewModelScope.launch {
+            combine(
+                recipeRepository.getRecipeById(recipeId),
+                recipeTypeRepository.getAllRecipeTypes()
+            ) { recipe, types ->
+                recipe to types
+            }.collect { (recipe, types) ->
+                recipe?.let { nonNullRecipe ->
+                    val recipeType = types.find { it.id == nonNullRecipe.typeId }
+                    _uiState.update {
+                        it.copy(
+                            title = nonNullRecipe.title,
+                            description = nonNullRecipe.description,
+                            cookingTime = nonNullRecipe.cookingTime,
+                            servings = nonNullRecipe.servings,
+                            selectedType = recipeType,
+                            imagePath = nonNullRecipe.imagePath,
+                            ingredients = nonNullRecipe.ingredients,
+                            instructions = nonNullRecipe.instructions,
+                            isLoading = false
+                        )
+                    }
+                }
+            }
+        }
+    }
+
     fun onImageSelected(uri: Uri) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val imagePath = ImageUtils.saveImageToInternalStorage(context = getApplication(), uri)
+        viewModelScope.launch {
+            val imagePath = ImageUtils.saveImageToInternalStorage(getApplication(), uri)
             imagePath?.let { path ->
                 _uiState.update { it.copy(imagePath = path) }
             }
         }
+    }
+
+    fun onImageRemoved() {
+        _uiState.value.imagePath?.let { path ->
+            ImageUtils.deleteImage(path)
+        }
+        _uiState.update { it.copy(imagePath = null) }
     }
 
     fun updateTitle(title: String) {
@@ -66,7 +107,8 @@ class AddRecipeViewModel(
         val newIngredient = Ingredient(
             name = name,
             amount = amount,
-            unit = unit
+            unit = unit,
+            recipeId = recipeId
         )
         _uiState.update {
             it.copy(ingredients = it.ingredients + newIngredient)
@@ -96,26 +138,20 @@ class AddRecipeViewModel(
         if (currentState.isValid()) {
             viewModelScope.launch {
                 val recipe = Recipe(
+                    id = recipeId,
                     title = currentState.title,
                     description = currentState.description,
-                    ingredients = currentState.ingredients,
-                    instructions = currentState.instructions,
+                    ingredients = currentState.ingredients.map { it.copy(recipeId = recipeId) },
+                    instructions = currentState.instructions.toList(),
                     cookingTime = currentState.cookingTime,
                     servings = currentState.servings,
                     typeId = currentState.selectedType?.id ?: 0,
                     imagePath = currentState.imagePath
                 )
-                recipeRepository.insertRecipe(recipe)
+                recipeRepository.updateRecipe(recipe)
                 _uiState.update { it.copy(isSaved = true) }
             }
         }
-    }
-
-    fun onImageRemoved() {
-        _uiState.value.imagePath?.let { path ->
-            ImageUtils.deleteImage(path)
-        }
-        _uiState.update { it.copy(imagePath = null) }
     }
 
     fun updateImageUrl(url: String) {
@@ -123,7 +159,7 @@ class AddRecipeViewModel(
     }
 }
 
-data class AddRecipeUiState(
+data class EditRecipeUiState(
     val title: String = "",
     val description: String = "",
     val cookingTime: Int = 0,
@@ -132,6 +168,7 @@ data class AddRecipeUiState(
     val imagePath: String? = null,
     val ingredients: List<Ingredient> = emptyList(),
     val instructions: List<String> = emptyList(),
+    val isLoading: Boolean = true,
     val isSaved: Boolean = false
 ) {
     fun isValid(): Boolean {
@@ -140,7 +177,8 @@ data class AddRecipeUiState(
                 cookingTime > 0 &&
                 servings > 0 &&
                 selectedType != null &&
-                ingredients.isNotEmpty() &&
-                instructions.isNotEmpty()
+                instructions.isNotEmpty() &&
+                ingredients.isNotEmpty()
+
     }
 }

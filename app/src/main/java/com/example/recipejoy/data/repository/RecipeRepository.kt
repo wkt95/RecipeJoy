@@ -74,6 +74,8 @@ class RecipeRepository(
 
     fun getRecipeById(recipeId: Int): Flow<Recipe?> {
         return recipeDao.getRecipeById(recipeId).map { recipeWithDetails ->
+            println("Fetched recipe: ${recipeWithDetails?.recipe?.title}")
+            println("Instructions count: ${recipeWithDetails?.instructions?.size}")
             recipeWithDetails?.let {
                 Recipe(
                     id = it.recipe.id,
@@ -134,6 +136,10 @@ class RecipeRepository(
     }
 
     suspend fun updateRecipe(recipe: Recipe) {
+
+        recipeDao.deleteRecipeById(recipe.id)
+        println("Updating recipe with instructions count: ${recipe.instructions.size}")
+
         val recipeEntity = RecipeEntity(
             id = recipe.id,
             title = recipe.title,
@@ -141,12 +147,8 @@ class RecipeRepository(
             cookingTime = recipe.cookingTime,
             servings = recipe.servings,
             typeId = recipe.typeId,
-            imagePath = recipe.imagePath,
-            isFavorite = recipe.isFavorite,
-            createdAt = recipe.createdAt
+            imagePath = recipe.imagePath
         )
-
-        recipeDao.deleteRecipeById(recipe.id)
 
         val ingredients = recipe.ingredients.map { ingredient ->
             IngredientEntity(
@@ -157,7 +159,7 @@ class RecipeRepository(
             )
         }
 
-        val instructions = recipe.instructions.mapIndexed { index, instruction ->
+        val instructions = recipe.instructions.distinct().mapIndexed { index, instruction ->
             InstructionEntity(
                 stepNumber = index + 1,
                 instruction = instruction,
@@ -165,7 +167,11 @@ class RecipeRepository(
             )
         }
 
-        recipeDao.insertRecipeWithDetails(recipeEntity, ingredients, instructions)
+        recipeDao.insertRecipeWithDetails(
+            recipe = recipeEntity,
+            ingredients = ingredients,
+            instructions = instructions
+        )
     }
 
     suspend fun deleteRecipe(recipeId: Int) {

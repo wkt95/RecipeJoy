@@ -1,0 +1,152 @@
+{
+  "recipes": [
+    {
+      "title": "Classic Pancakes",
+      "description": "Fluffy and delicious breakfast pancakes",
+      "cookingTime": 20,
+      "servings": 4,
+      "typeId": 6,
+      "imagePath": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800",
+      "ingredients": [
+        {
+          "name": "All-purpose flour",
+          "amount": 1.5,
+          "unit": "cups"
+        },
+        {
+          "name": "Baking powder",
+          "amount": 3.5,
+          "unit": "tsp"
+        },
+        {
+          "name": "Salt",
+          "amount": 0.25,
+          "unit": "tsp"
+        },
+        {
+          "name": "Sugar",
+          "amount": 1.0,
+          "unit": "tbsp"
+        },
+        {
+          "name": "Milk",
+          "amount": 1.25,
+          "unit": "cups"
+        },
+        {
+          "name": "Egg",
+          "amount": 1.0,
+          "unit": "piece"
+        },
+        {
+          "name": "Melted butter",
+          "amount": 3.0,
+          "unit": "tbsp"
+        }
+      ],
+      "instructions": [
+        "In a large bowl, whisk together flour, baking powder, salt, and sugar",
+        "In another bowl, whisk together milk, egg, and melted butter",
+        "Pour wet ingredients into dry ingredients and whisk until just combined",
+        "Heat a griddle or pan over medium heat",
+        "Pour 1/4 cup batter for each pancake",
+        "Cook until bubbles form on surface, flip and cook other side"
+      ]
+    },
+    {
+      "title": "Spaghetti Bolognese",
+      "description": "Classic Italian pasta with rich meat sauce",
+      "cookingTime": 45,
+      "servings": 6,
+      "typeId": 1,
+      "imagePath": "https://images.unsplash.com/photo-1598866594230-a7c12756260f?w=800",
+      "ingredients": [
+        {
+          "name": "Spaghetti",
+          "amount": 500.0,
+          "unit": "g"
+        },
+        {
+          "name": "Ground beef",
+          "amount": 500.0,
+          "unit": "g"
+        },
+        {
+          "name": "Onion",
+          "amount": 1.0,
+          "unit": "piece"
+        },
+        {
+          "name": "Garlic cloves",
+          "amount": 3.0,
+          "unit": "pieces"
+        },
+        {
+          "name": "Crushed tomatoes",
+          "amount": 400.0,
+          "unit": "g"
+        },
+        {
+          "name": "Tomato paste",
+          "amount": 2.0,
+          "unit": "tbsp"
+        },
+        {
+          "name": "Dried oregano",
+          "amount": 1.0,
+          "unit": "tsp"
+        },
+        {
+          "name": "Olive oil",
+          "amount": 2.0,
+          "unit": "tbsp"
+        }
+      ],
+      "instructions": [
+        "Heat olive oil in a large pan over medium heat",
+        "Add chopped onion and garlic, sauté until softened",
+        "Add ground beef and cook until browned",
+        "Add crushed tomatoes, tomato paste, and oregano",
+        "Simmer for 30 minutes",
+        "Cook spaghetti according to package instructions",
+        "Serve sauce over pasta"
+      ]
+    },
+    {
+      "title": "Caesar Salad",
+      "description": "Fresh and crispy classic Caesar salad",
+      "cookingTime": 15,
+      "servings": 4,
+      "typeId": 4,
+      "imagePath": "https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=800",
+      "ingredients": [
+        {
+          "name": "Romaine lettuce",
+          "amount": 1.0,
+          "unit": "head"
+        },
+        {
+          "name": "Parmesan cheese",
+          "amount": 50.0,
+          "unit": "g"
+        },
+        {
+          "name": "Croutons",
+          "amount": 100.0,
+          "unit": "g"
+        },
+        {
+          "name": "Caesar dressing",
+          "amount": 60.0,
+          "unit": "ml"
+        }
+      ],
+      "instructions": [
+        "Wash and chop the romaine lettuce",
+        "Grate the parmesan cheese",
+        "In a large bowl, combine lettuce and dressing",
+        "Top with croutons and grated parmesan"
+      ]
+    }
+  ]
+}

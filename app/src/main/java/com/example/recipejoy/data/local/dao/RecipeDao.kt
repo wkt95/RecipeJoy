@@ -44,9 +44,14 @@ interface RecipeDao {
     @Delete
     suspend fun deleteRecipe(recipe: RecipeEntity)
 
+    @Transaction
     @Query("DELETE FROM recipes WHERE id = :recipeId")
     suspend fun deleteRecipeById(recipeId: Int)
 
+
     @Query("UPDATE recipes SET isFavorite = :isFavorite WHERE id = :recipeId")
     suspend fun updateFavoriteStatus(recipeId: Int, isFavorite: Boolean)
+
+    @Query("SELECT COUNT(*) FROM recipes")
+    suspend fun getRecipeCount(): Int
 }

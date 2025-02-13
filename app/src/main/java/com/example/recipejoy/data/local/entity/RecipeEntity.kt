@@ -39,7 +39,17 @@ data class IngredientEntity(
     val recipeId: Int
 )
 
-@Entity(tableName = "instructions")
+@Entity(
+    tableName = "instructions",
+    foreignKeys = [
+        ForeignKey(
+            entity = RecipeEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["recipeId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
 data class InstructionEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
