@@ -42,40 +42,8 @@ class RecipeRepository(
         }
     }
 
-    fun getRecipesByType(typeId: Int): Flow<List<Recipe>> {
-        return recipeDao.getRecipesByType(typeId).map { recipeWithDetailsList ->
-            recipeWithDetailsList.map { recipeWithDetails ->
-                Recipe(
-                    id = recipeWithDetails.recipe.id,
-                    title = recipeWithDetails.recipe.title,
-                    description = recipeWithDetails.recipe.description,
-                    ingredients = recipeWithDetails.ingredients.map { ingredientEntity ->
-                        Ingredient(
-                            id = ingredientEntity.id,
-                            name = ingredientEntity.name,
-                            amount = ingredientEntity.amount,
-                            unit = ingredientEntity.unit,
-                            recipeId = ingredientEntity.recipeId
-                        )
-                    },
-                    instructions = recipeWithDetails.instructions
-                        .sortedBy { it.stepNumber }
-                        .map { it.instruction },
-                    cookingTime = recipeWithDetails.recipe.cookingTime,
-                    servings = recipeWithDetails.recipe.servings,
-                    typeId = recipeWithDetails.recipe.typeId,
-                    imagePath = recipeWithDetails.recipe.imagePath,
-                    isFavorite = recipeWithDetails.recipe.isFavorite,
-                    createdAt = recipeWithDetails.recipe.createdAt
-                )
-            }
-        }
-    }
-
     fun getRecipeById(recipeId: Int): Flow<Recipe?> {
         return recipeDao.getRecipeById(recipeId).map { recipeWithDetails ->
-            println("Fetched recipe: ${recipeWithDetails?.recipe?.title}")
-            println("Instructions count: ${recipeWithDetails?.instructions?.size}")
             recipeWithDetails?.let {
                 Recipe(
                     id = it.recipe.id,
@@ -115,7 +83,7 @@ class RecipeRepository(
             isFavorite = recipe.isFavorite
         )
 
-        val ingredients = recipe.ingredients.mapIndexed { index, ingredient ->
+        val ingredients = recipe.ingredients.mapIndexed { _, ingredient ->
             IngredientEntity(
                 name = ingredient.name,
                 amount = ingredient.amount,
@@ -138,7 +106,6 @@ class RecipeRepository(
     suspend fun updateRecipe(recipe: Recipe) {
 
         recipeDao.deleteRecipeById(recipe.id)
-        println("Updating recipe with instructions count: ${recipe.instructions.size}")
 
         val recipeEntity = RecipeEntity(
             id = recipe.id,

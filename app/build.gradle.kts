@@ -73,4 +73,8 @@ dependencies {
     ksp(libs.moshi.kotlin.codegen)
     
     implementation(libs.androidx.material.icons.extended)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.kotlinx.coroutines.test)
 }

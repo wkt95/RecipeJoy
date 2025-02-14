@@ -48,7 +48,7 @@ fun RecipeCard(
                 contentScale = ContentScale.Crop,
                 error = painterResource(id = R.drawable.placeholder_recipe)
             )
-            println("Loading image from path: ${recipe.imagePath}")
+
             Column(
                 modifier = Modifier.padding(16.dp)
             ) {

@@ -57,7 +57,6 @@ class DatabaseLoader(
     suspend fun preloadData() {
         withContext(Dispatchers.IO) {
             val recipeCount = recipeDao.getRecipeCount()
-            println("Current recipe count before preload: $recipeCount")
 
             if (recipeCount == 0) {
                 preloadRecipeTypes()
@@ -87,7 +86,6 @@ class DatabaseLoader(
     }
 
     private suspend fun preloadRecipes() {
-        println("Starting preload recipes")
         if (recipeDao.getRecipeCount() == 0) {
             try {
                 val jsonString = context.resources
@@ -95,13 +93,8 @@ class DatabaseLoader(
                     .bufferedReader()
                     .use { it.readText() }
 
-                println("Recipe JSON content: $jsonString")
-
                 val adapter = moshi.adapter(RecipesJson::class.java)
                 val recipesJson = adapter.fromJson(jsonString)?.recipes
-
-                println("Parsed recipes: ${recipesJson?.size}")
-                println("First recipe image path: ${recipesJson?.firstOrNull()?.imagePath}")
 
                 recipesJson?.forEach { recipeJson ->
                     val recipe = RecipeEntity(
@@ -134,7 +127,6 @@ class DatabaseLoader(
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                println("Error loading recipes: ${e.message}")
             }
         }
     }

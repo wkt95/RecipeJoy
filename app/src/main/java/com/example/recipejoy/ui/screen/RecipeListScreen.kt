@@ -16,7 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -53,11 +53,11 @@ fun RecipeListScreen(
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
     val screenWidthDp = configuration.screenWidthDp.dp
 
-    // Calculate grid columns based on screen width
+
     val gridColumns = when {
-        screenWidthDp > 840.dp -> 3 // Tablet landscape
-        screenWidthDp > 600.dp -> 2 // Tablet portrait or large phone landscape
-        else -> 1 // Phone portrait
+        screenWidthDp > 840.dp -> 3
+        screenWidthDp > 600.dp -> 2
+        else -> 1
     }
 
     Scaffold(
@@ -65,16 +65,18 @@ fun RecipeListScreen(
             TopAppBar(
                 title = { Text("RecipeJoy") },
                 actions = {
-                    IconButton(onClick = { /* Implement search */ }) {
+                    IconButton(onClick = { }) {
                         Icon(Icons.Default.Search, contentDescription = "Search")
                     }
                 }
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = onAddRecipeClick) {
-                Icon(Icons.Default.Add, contentDescription = "Add Recipe")
-            }
+            ExtendedFloatingActionButton(
+                onClick = onAddRecipeClick,
+                icon = { Icon(Icons.Default.Add, contentDescription = null) },
+                text = { Text("Add New Recipe") }
+            )
         }
     ) { paddingValues ->
         Column(
@@ -82,7 +84,6 @@ fun RecipeListScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            // Search and Filter Section with adaptive padding
             val horizontalPadding = when {
                 screenWidthDp > 840.dp -> 32.dp
                 screenWidthDp > 600.dp -> 24.dp
